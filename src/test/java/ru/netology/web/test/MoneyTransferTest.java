@@ -90,6 +90,17 @@ class MoneyTransferTest {
     }
 
     @Test
+    void errorToTransferSecondCardToSecond() {
+        val dashboardPage = new DashboardPage();
+
+        val moneyTransfer = dashboardPage.secondCardButton();
+        val infoCard = DataHelper.getSecondCardNumber();
+        String sum = "999999";
+        moneyTransfer.transferForm(sum, infoCard);
+        moneyTransfer.getError();
+    }
+
+    @Test
     void negativeTransferFirstCardToSecond() {
         val dashboardPage = new DashboardPage();
 
