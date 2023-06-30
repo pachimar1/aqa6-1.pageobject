@@ -84,7 +84,7 @@ class MoneyTransferTest {
 
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getFirstCardNumber();
-        String sum = "30000";
+        String sum = "999999";
         moneyTransfer.transferForm(sum, infoCard);
         moneyTransfer.getError();
     }
@@ -95,7 +95,7 @@ class MoneyTransferTest {
 
         val moneyTransfer = dashboardPage.firstCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
-        String sum = "20000";
+        String sum = "500000";
         moneyTransfer.transferForm(sum, infoCard);
         moneyTransfer.getError();
     }
