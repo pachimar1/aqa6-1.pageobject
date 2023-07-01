@@ -9,6 +9,8 @@ import ru.netology.web.page.DashboardPage;
 import ru.netology.web.page.LoginPageV2;
 
 
+import java.util.Random;
+
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,19 +34,12 @@ class MoneyTransferTest {
         int balanceSecondCard = dashboardPage.getSecondCardBalance();
         val moneyTransfer = dashboardPage.firstCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
-        String sum = DataHelper.getRandomTransferAmount().getAmount();
+        String sum = String.valueOf(DataHelper.generateValidAmount(balanceFirstCard));
+        moneyTransfer.transferForm(sum, infoCard);
 
-        if (balanceFirstCard >= Integer.parseInt(sum)) {
-            moneyTransfer.transferForm(String.valueOf(Integer.parseInt(sum)), infoCard);
+        assertEquals(balanceFirstCard + Integer.parseInt(sum), dashboardPage.getFirstCardBalance());
+        assertEquals(balanceSecondCard - Integer.parseInt(sum), dashboardPage.getSecondCardBalance());
 
-            assertEquals(balanceFirstCard + Integer.parseInt(sum), dashboardPage.getFirstCardBalance());
-            assertEquals(balanceSecondCard - Integer.parseInt(sum), dashboardPage.getSecondCardBalance());
-        } else {
-            moneyTransfer.transferForm("0", infoCard);
-
-            assertEquals(balanceFirstCard, dashboardPage.getFirstCardBalance());
-            assertEquals(balanceSecondCard, dashboardPage.getSecondCardBalance());
-        }
     }
 
     @Test
@@ -55,19 +50,12 @@ class MoneyTransferTest {
         int balanceSecondCard = dashboardPage.getSecondCardBalance();
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getFirstCardNumber();
-        String sum = DataHelper.getRandomTransferAmount().getAmount();
+        String sum = String.valueOf(DataHelper.generateValidAmount(balanceSecondCard));
+        moneyTransfer.transferForm(sum, infoCard);
 
-        if (balanceFirstCard >= Integer.parseInt(sum)) {
-            moneyTransfer.transferForm(String.valueOf(Integer.parseInt(sum)), infoCard);
+        assertEquals(balanceFirstCard - Integer.parseInt(sum), dashboardPage.getFirstCardBalance());
+        assertEquals(balanceSecondCard + Integer.parseInt(sum), dashboardPage.getSecondCardBalance());
 
-            assertEquals(balanceFirstCard - Integer.parseInt(sum), dashboardPage.getFirstCardBalance());
-            assertEquals(balanceSecondCard + Integer.parseInt(sum), dashboardPage.getSecondCardBalance());
-        } else {
-            moneyTransfer.transferForm("0", infoCard);
-
-            assertEquals(balanceFirstCard, dashboardPage.getFirstCardBalance());
-            assertEquals(balanceSecondCard, dashboardPage.getSecondCardBalance());
-        }
     }
 
     @Test
@@ -76,6 +64,12 @@ class MoneyTransferTest {
 
         val moneyTransfer = dashboardPage.firstCardButton();
         moneyTransfer.cancelButton();
+
+        int balanceFirstCard = dashboardPage.getFirstCardBalance();
+        int balanceSecondCard = dashboardPage.getSecondCardBalance();
+
+        assertEquals(balanceFirstCard, dashboardPage.getFirstCardBalance());
+        assertEquals(balanceSecondCard, dashboardPage.getSecondCardBalance());
     }
 
     @Test
@@ -95,7 +89,7 @@ class MoneyTransferTest {
 
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
-        String sum = "999999";
+        String sum = "3000";
         moneyTransfer.transferForm(sum, infoCard);
         moneyTransfer.getError();
     }

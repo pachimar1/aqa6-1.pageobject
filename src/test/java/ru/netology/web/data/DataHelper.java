@@ -30,13 +30,12 @@ public class DataHelper {
         return new CardNumber("5559 0000 0000 0002");
     }
 
-    public static TransferAmount getRandomTransferAmount() {
-        Random random = new Random();
-        int amount = random.nextInt(10_000); // Генерируем случайное число от 0 до 15000
-        if (amount == 0 || amount > 10_000) {
-            throw new IllegalArgumentException("Недопустимое значение для суммы перевода");
-        }
-        return new TransferAmount(String.valueOf(amount));
+    public static int generateValidAmount(int balance) {
+        return new Random().nextInt(balance) + 1;
+    }
+
+    public static int generateInvalidAmount(int balance) {
+        return Math.abs(balance) + new Random().nextInt(10000);
     }
 
     @Value

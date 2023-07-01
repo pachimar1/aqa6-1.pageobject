@@ -1,5 +1,6 @@
 package ru.netology.web.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.web.data.DataHelper;
 
@@ -29,7 +30,7 @@ public class TransferPage {
     }
 
     public void getError() {
-        $(byText("Ошибка!")).shouldBe(visible);
+        $(byText(error.text())).shouldBe(visible);
     }
 
     public DashboardPage cancelButton() {
