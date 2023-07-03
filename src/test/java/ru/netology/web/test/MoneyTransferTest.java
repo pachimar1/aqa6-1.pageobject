@@ -84,6 +84,7 @@ class MoneyTransferTest {
         val dashboardPage = new DashboardPage();
 
         int balanceSecondCard = dashboardPage.getSecondCardBalance();
+
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getFirstCardNumber();
         String sum = String.valueOf(DataHelper.generateInvalidAmount(balanceSecondCard));
@@ -96,6 +97,7 @@ class MoneyTransferTest {
         val dashboardPage = new DashboardPage();
 
         int balanceSecondCard = dashboardPage.getSecondCardBalance();
+
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
         String sum = String.valueOf(DataHelper.generateValidAmount(balanceSecondCard));
@@ -119,6 +121,8 @@ class MoneyTransferTest {
     @Test
     void negativeTransferZeroValue() {
         val dashboardPage = new DashboardPage();
+
+        int balanceSecondCard = dashboardPage.getSecondCardBalance();
 
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getFirstCardNumber();

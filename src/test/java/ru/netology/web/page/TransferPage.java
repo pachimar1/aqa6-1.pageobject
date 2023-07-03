@@ -13,12 +13,12 @@ import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
-    private SelenideElement head = $(withText("Пополнение карты"));
     private final SelenideElement amount = $("[data-test-id=amount] input");
     private final SelenideElement from = $("[data-test-id=from] input");
     private final SelenideElement button = $("[data-test-id=action-transfer]");
     private final SelenideElement cancelButton = $("[data-test-id=action-cancel]");
     private final SelenideElement errorNotification = $("[data-test-id=error-notification]");
+    private SelenideElement head = $(withText("Пополнение карты"));
 
     public TransferPage() {
         head.shouldBe(visible);
