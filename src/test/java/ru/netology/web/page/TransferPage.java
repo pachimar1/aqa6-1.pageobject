@@ -4,6 +4,9 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.web.data.DataHelper;
 
+import java.time.Duration;
+
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
@@ -15,7 +18,7 @@ public class TransferPage {
     private final SelenideElement from = $("[data-test-id=from] input");
     private final SelenideElement button = $("[data-test-id=action-transfer]");
     private final SelenideElement cancelButton = $("[data-test-id=action-cancel]");
-    private final SelenideElement error = $("[data-test-id=error-notification]");
+    private final SelenideElement errorNotification = $("[data-test-id=error-notification]");
 
     public TransferPage() {
         head.shouldBe(visible);
@@ -29,8 +32,8 @@ public class TransferPage {
 
     }
 
-    public void getError() {
-        $(byText(error.text())).shouldBe(visible);
+    public void findErrorMessage(String errorText) {
+        errorNotification.shouldBe(visible).shouldHave(exactText(errorText), Duration.ofSeconds(15));
     }
 
     public DashboardPage cancelButton() {

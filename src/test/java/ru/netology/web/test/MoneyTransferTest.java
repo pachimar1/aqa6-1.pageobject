@@ -1,6 +1,7 @@
 package ru.netology.web.test;
 
 import lombok.val;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import ru.netology.web.page.LoginPageV2;
 
 import java.util.Random;
 
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MoneyTransferTest {
@@ -24,6 +25,12 @@ class MoneyTransferTest {
         var verificationPage = loginPage.validLogin(authInfo);
         var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
         verificationPage.validVerify(verificationCode);
+    }
+
+    @AfterEach
+    void memoryClear() {
+        clearBrowserCookies();
+        clearBrowserLocalStorage();
     }
 
     @Test
@@ -62,11 +69,11 @@ class MoneyTransferTest {
     void clickCancel() {
         val dashboardPage = new DashboardPage();
 
-        val moneyTransfer = dashboardPage.firstCardButton();
-        moneyTransfer.cancelButton();
-
         int balanceFirstCard = dashboardPage.getFirstCardBalance();
         int balanceSecondCard = dashboardPage.getSecondCardBalance();
+
+        val moneyTransfer = dashboardPage.firstCardButton();
+        moneyTransfer.cancelButton();
 
         assertEquals(balanceFirstCard, dashboardPage.getFirstCardBalance());
         assertEquals(balanceSecondCard, dashboardPage.getSecondCardBalance());
@@ -76,33 +83,37 @@ class MoneyTransferTest {
     void negativeTransferSecondCardToFirst() {
         val dashboardPage = new DashboardPage();
 
+        int balanceSecondCard = dashboardPage.getSecondCardBalance();
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getFirstCardNumber();
-        String sum = "999999";
+        String sum = String.valueOf(DataHelper.generateInvalidAmount(balanceSecondCard));
         moneyTransfer.transferForm(sum, infoCard);
-        moneyTransfer.getError();
+        moneyTransfer.findErrorMessage("Выполнена попытка перевести денежные средства, превыщающие остаток на карте списания");
     }
 
     @Test
     void errorToTransferSecondCardToSecond() {
         val dashboardPage = new DashboardPage();
 
+        int balanceSecondCard = dashboardPage.getSecondCardBalance();
         val moneyTransfer = dashboardPage.secondCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
-        String sum = "3000";
+        String sum = String.valueOf(DataHelper.generateValidAmount(balanceSecondCard));
         moneyTransfer.transferForm(sum, infoCard);
-        moneyTransfer.getError();
+        moneyTransfer.findErrorMessage("Выполнена попытка перевести денежные средства с той же карты, в которую переводите");
     }
 
     @Test
     void negativeTransferFirstCardToSecond() {
         val dashboardPage = new DashboardPage();
 
+        int balanceFirstCard = dashboardPage.getFirstCardBalance();
+
         val moneyTransfer = dashboardPage.firstCardButton();
         val infoCard = DataHelper.getSecondCardNumber();
-        String sum = "500000";
+        String sum = String.valueOf(DataHelper.generateInvalidAmount(balanceFirstCard));
         moneyTransfer.transferForm(sum, infoCard);
-        moneyTransfer.getError();
+        moneyTransfer.findErrorMessage("Выполнена попытка перевести денежные средства, превыщающие остаток на карте списания");
     }
 
     @Test
@@ -113,7 +124,7 @@ class MoneyTransferTest {
         val infoCard = DataHelper.getFirstCardNumber();
         String sum = "0";
         moneyTransfer.transferForm(sum, infoCard);
-        moneyTransfer.getError();
+        moneyTransfer.findErrorMessage("Невозможно перевести 0 руб.");
     }
 }
 
